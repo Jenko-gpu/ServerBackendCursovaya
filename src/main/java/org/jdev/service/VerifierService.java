@@ -1,6 +1,6 @@
 package org.jdev.service;
 
-import org.apache.http.HttpEntity;
+import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -8,15 +8,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.jdev.other.VKapiJSON;
+import org.json.JSONException;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.*;
-import java.net.http.HttpClient;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class VerifierService {
 
     private static String apiUrl = "https://id.vk.com/oauth2/auth";
 
-    public String getAccessToken(String code, String code_verifier, String deviceId, String state){
+    public Integer getUserId(String code, String code_verifier, String deviceId, String state){
         try {
             /*
             URL url = new URL("https://id.vk.com/oauth2/auth");
@@ -63,16 +60,17 @@ public class VerifierService {
 
 
             HttpResponse response = httpclient.execute(httppost);
-            HttpEntity entity = response.getEntity();
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(entity.getContent(), "UTF-8"))) {
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    System.out.println(inputLine);
-                }
-            }
+            String data = EntityUtils.toString(response.getEntity());
+
+            Gson gson = new Gson();
+            VKapiJSON myClassObj = gson.fromJson(data, VKapiJSON.class);
+
+            return myClassObj.getUser_id();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
         }
-        return "!";
+        return 0;
     }
 }

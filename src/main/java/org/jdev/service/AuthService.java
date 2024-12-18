@@ -3,7 +3,6 @@ package org.jdev.service;
 import org.jdev.controller.dto.AuthRequestDTO;
 import org.jdev.controller.dto.AuthResponseDTO;
 import org.jdev.exeptions.NotFoundAccessToken;
-import org.jdev.repository.AuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +21,13 @@ public class AuthService {
     @Autowired
     private VerifierService verifierService;
 
-    private final AuthRepository authRepository;
+    //private final AuthRepository authRepository;
     private final Map<String, String> registerStorage = new HashMap<>();
     private final Map<String, String> userStorage = new HashMap<>();
 
-    @Autowired
-    public AuthService(AuthRepository authRepository) {
-        this.authRepository = authRepository;
+    //@Autowired
+    public AuthService(/*AuthRepository authRepository*/) {
+        //this.authRepository = authRepository;
     }
 
     public AuthResponseDTO register(){
@@ -51,8 +50,9 @@ public class AuthService {
         registerStorage.remove(request.getApiAccess());
 
         userStorage.put(request.getCode(), codeVerifier);
+        Integer userId = verifierService.getUserId(request.getCode(), codeVerifier, request.getDeviceId(), request.getState());
 
-        return verifierService.getAccessToken(request.getCode(), codeVerifier, request.getDeviceId(), request.getState());
+        return userId.toString();
     }
 
 }

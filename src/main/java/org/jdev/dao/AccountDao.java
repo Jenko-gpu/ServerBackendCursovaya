@@ -11,7 +11,7 @@ public class AccountDao {
 
     private final SessionFactory sessionFactory;
 
-    @Autowired
+    //@Autowired
     public AccountDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
