@@ -10,15 +10,15 @@ import javax.persistence.ManyToOne;
 
 @Setter
 @Getter
-//@Entity
+@Entity
 public class Scores {
 
-    //@ManyToOne
-    //@JoinColumn(name = "User_id")
+    @ManyToOne
+    @JoinColumn(name = "User_id")
     private User user;
 
-    //@ManyToOne
-    //@JoinColumn(name = "Subject_id")
+    @ManyToOne
+    @JoinColumn(name = "Subject_id")
     private Subject subject;
 
     private Integer lecture_score;

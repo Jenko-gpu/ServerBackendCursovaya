@@ -68,8 +68,6 @@ public class VerifierService {
             return myClassObj.getUser_id();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
         }
         return 0;
     }

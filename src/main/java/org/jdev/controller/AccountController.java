@@ -52,4 +52,18 @@ public class AccountController {
         return null;
     }
 
+
+    @GetMapping("/api/scores/{userId}")
+    public List<ScoresDTO> getScoresByUser(@PathVariable Integer userId) {
+        User user =
+
+        List<Scores> scoresList = scoresRepository.getScoresByUser(user);
+        return scoresList.stream().map(score -> new ScoresDTO(
+                score.getLecture_score(),
+                score.getPractice_score(),
+                score.getExam_score(),
+                score.getUser().getName(),
+                score.getSubject().getName()
+        )).collect(Collectors.toList());
+    }
 }

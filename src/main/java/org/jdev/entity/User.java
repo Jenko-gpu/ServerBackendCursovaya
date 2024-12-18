@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-//@Entity
+@Entity
 public class User {
 
     private Integer id;
