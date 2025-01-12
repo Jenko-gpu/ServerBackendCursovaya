@@ -1,34 +1,41 @@
 package org.jdev.controller;
 
-import org.jdev.controller.dto.AuthRequestDTO;
-import org.jdev.controller.dto.AuthResponseDTO;
+import org.jdev.controller.dto.*;
+import org.jdev.entity.Scores;
+import org.jdev.entity.Shedule;
 import org.jdev.entity.Subject;
-import org.jdev.service.AuthGeneratorCodes;
+import org.jdev.entity.User;
+import org.jdev.other.DataPrepared;
 import org.jdev.service.AuthService;
-import org.jdev.service.JwtUtils;
-import org.jdev.service.VerifierService;
+import org.jdev.service.ScoreService;
+import org.jdev.service.SheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin
+@CrossOrigin()
 public class AccountController {
+    private boolean notLoaded = true;
 
-
-
+    private final DataPrepared dataPrepared;
 
     private final AuthService authService;
+    private final ScoreService scoreService;
+    private final SheduleService sheduleService;
 
     @Autowired
-    public AccountController(AuthService authService){
+    public AccountController(DataPrepared dataPrepared, AuthService authService, ScoreService scoreService, SheduleService sheduleService){
+        this.dataPrepared = dataPrepared;
         this.authService = authService;
+        this.scoreService = scoreService;
+        this.sheduleService = sheduleService;
     }
 
 
@@ -39,31 +46,47 @@ public class AccountController {
     }
 
     @PostMapping(value = "/api/auth/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequestDTO request){
+    public UserInfoResponseDTO login(@RequestBody AuthRequestDTO request){
 
-        authService.login(request);
+        UserInfoResponseDTO userInfoResponseDTO = authService.login(request);
 
-        return new ResponseEntity<>("22", HttpStatus.OK);
+        if (notLoaded) { // Заполнение тестовыми данными TODO УБРАТЬ ПОСЛЕ
+            dataPrepared.userTest(authService.getUser(userInfoResponseDTO.getCode()));
+            notLoaded = false;
+        }
+        return userInfoResponseDTO;
     }
 
-    @GetMapping
-    public List<Subject> getAllSubjects() {
-        // Логика получения всех предметов
-        return null;
+    @PostMapping(value = "/api/subjects")
+    public List<Subject> getAllSubjects(@RequestBody UserInfoRequestDTO request) {
+        return null; // TODO
     }
 
+    @PostMapping(value = "/api/scores")
+    public List<ScoresDTO> getScoresByUser(@RequestBody UserInfoRequestDTO request) {
 
-    @GetMapping("/api/scores/{userId}")
-    public List<ScoresDTO> getScoresByUser(@PathVariable Integer userId) {
-        User user =
-
-        List<Scores> scoresList = scoresRepository.getScoresByUser(user);
+        User user = authService.getUser(request.getCode());
+        List<Scores> scoresList = scoreService.getScores(user);
         return scoresList.stream().map(score -> new ScoresDTO(
                 score.getLecture_score(),
                 score.getPractice_score(),
                 score.getExam_score(),
-                score.getUser().getName(),
-                score.getSubject().getName()
+                score.getId().getSubject().getTeacher(),
+                score.getId().getSubject().getName()
         )).collect(Collectors.toList());
     }
+
+    @PostMapping(value = "/api/shedule")
+    public List<SheduleDTO> getShedule(@RequestBody SheduleRequestDTO request) {
+        User user = authService.getUser(request.getCode());
+        List<Shedule> sheduleList = sheduleService.getShedule(user, request.getDayFrom(), request.getDayTo());
+        return sheduleList.stream().map(shedule -> new SheduleDTO(
+                shedule.getSubject().getName(),
+                shedule.getDate().toString(),
+                shedule.getStartTime().toString(),
+                shedule.getEndTime().toString(),
+                shedule.getSubject().getTeacher()
+        )).collect(Collectors.toList());
+    }
+
 }

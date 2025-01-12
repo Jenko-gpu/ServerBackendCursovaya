@@ -10,14 +10,14 @@ public class ScoresDTO {
     private Integer lectureScore;
     private Integer practiceScore;
     private Integer examScore;
-    private String userName; // имя пользователя
+    private String teachersName; // имя пользователя
     private String subjectName; // название предмета
 
-    public ScoresDTO(Integer lectureScore, Integer practiceScore, Integer examScore, String userName, String subjectName) {
+    public ScoresDTO(Integer lectureScore, Integer practiceScore, Integer examScore, String teachersName, String subjectName) {
         this.lectureScore = lectureScore;
         this.practiceScore = practiceScore;
         this.examScore = examScore;
-        this.userName = userName;
+        this.teachersName = teachersName;
         this.subjectName = subjectName;
     }
 }

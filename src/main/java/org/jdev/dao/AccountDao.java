@@ -13,12 +13,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 
-@Repository
+//@Repository
 public class AccountDao {
 
     private final SessionFactory sessionFactory;
 
-    @Autowired
+    //@Autowired
     public AccountDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -66,8 +66,6 @@ public class AccountDao {
         }
         return scoresList;
     }
-    }
-
 
     public User findById(Long id) {
         Session session = sessionFactory.openSession();

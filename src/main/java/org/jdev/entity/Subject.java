@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 public class Subject {
 
-
+    @Id
     private Integer id;
 
     private String name;
@@ -25,6 +25,12 @@ public class Subject {
         this.id = id;
         this.name = name;
         this.teacher = teacher;
+    }
+
+    public Subject(Subject subject) {
+        this.id = subject.id;
+        this.name = subject.name;
+        this.teacher = subject.teacher;
     }
 
     @Override

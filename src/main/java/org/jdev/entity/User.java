@@ -1,9 +1,6 @@
 package org.jdev.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +10,7 @@ import lombok.Setter;
 @Entity
 public class User {
 
+    @Id
     private Integer id;
 
     private String name;
@@ -28,7 +26,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "Auth{" +
+        return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

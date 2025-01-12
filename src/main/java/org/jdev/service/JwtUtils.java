@@ -5,12 +5,24 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.Date;
 
 @Service
 public class JwtUtils {
-    private final String SECRET_KEY = "your_secret_key"; // TODO убрать в venv или генерировать на лету
+    private final String SECRET_KEY;// = "your_secret_key";
     private final long EXPIRATION_TIME = 86400000; // 1 день
+
+
+    private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static SecureRandom rnd = new SecureRandom();
+
+    public JwtUtils() {
+        StringBuilder sb = new StringBuilder(8);
+        for(int i = 0; i < 8; i++)
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        SECRET_KEY = sb.toString();
+    }
 
     public String generateToken(String username) {
         return Jwts.builder()
