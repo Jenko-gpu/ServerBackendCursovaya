@@ -15,4 +15,4 @@ spring:
     password:
 
 app:
-  clientId: 52681983
+  clientId: env(clientId)

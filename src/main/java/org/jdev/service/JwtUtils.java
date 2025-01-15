@@ -10,8 +10,7 @@ import java.util.Date;
 
 @Service
 public class JwtUtils {
-    private final String SECRET_KEY;// = "your_secret_key";
-    private final long EXPIRATION_TIME = 86400000; // 1 день
+    private String SECRET_KEY;// = "your_secret_key";
 
 
     private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -25,6 +24,8 @@ public class JwtUtils {
     }
 
     public String generateToken(String username) {
+        // 1 день
+        long EXPIRATION_TIME = 86400000;
         return Jwts.builder()
                 .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

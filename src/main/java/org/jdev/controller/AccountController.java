@@ -54,6 +54,7 @@ public class AccountController {
             dataPrepared.userTest(authService.getUser(userInfoResponseDTO.getCode()));
             notLoaded = false;
         }
+
         return userInfoResponseDTO;
     }
 
